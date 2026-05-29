@@ -6,7 +6,8 @@ info 'Preparing...'
 apt update && apt upgrade -y
 apt install -y curl ca-certificates tar
 
-JDTLS_URL="https://download.eclipse.org/jdtls/snapshots/jdt-language-server-latest.tar.gz"
+JDTLS_VERSION="1.58.0"
+JDTLS_URL="https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/${JDTLS_VERSION}/jdt-language-server-${JDTLS_VERSION}-202604151538.tar.gz"
 INSTALL_DIR="$HOME/.lsp/java"
 
 install() {
@@ -32,7 +33,7 @@ install() {
     chmod +x bin/jdtls
   fi
 
-  date +%Y-%m-%d > version.txt
+  echo "$JDTLS_VERSION" > version.txt
 
   info 'Java LSP (jdtls) installed successfully.'
   exit 0

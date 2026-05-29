@@ -1,6 +1,7 @@
 package com.androdev.java.lsp
 
 import android.content.Context
+import com.rk.activities.main.fileTreeViewModel
 import com.rk.exec.isTerminalInstalled
 import com.rk.file.child
 import com.rk.file.sandboxHomeDir
@@ -17,6 +18,10 @@ class JavaServer(override val icon: Icon, override val installScript: File) : Sc
 
     override val installId = "Java language server"
 
+    companion object {
+        private const val LATEST_VERSION = "1.58.0"
+    }
+
     override suspend fun isInstalled(context: Context): Boolean {
         if (!isTerminalInstalled()) {
             return false
@@ -26,10 +31,9 @@ class JavaServer(override val icon: Icon, override val installScript: File) : Sc
     }
 
     override suspend fun isUpdatable(context: Context): Boolean {
-        /*val versionFile = sandboxHomeDir().child(".lsp/java/version.txt")
+        val versionFile = sandboxHomeDir().child(".lsp/java/version.txt")
         val currentVersion = runCatching { versionFile.readText().trim() }.getOrNull()
-        return currentVersion != LATEST_VERSION*/
-        return false;
+        return currentVersion != LATEST_VERSION
     }
 
     override fun getConnectionConfig(): LspConnectionConfig {
