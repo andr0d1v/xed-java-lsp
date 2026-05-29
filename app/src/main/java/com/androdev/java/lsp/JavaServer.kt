@@ -1,7 +1,6 @@
 package com.androdev.java.lsp
 
 import android.content.Context
-import com.rk.activities.main.fileTreeViewModel
 import com.rk.exec.isTerminalInstalled
 import com.rk.file.child
 import com.rk.file.sandboxHomeDir
@@ -38,15 +37,12 @@ class JavaServer(override val icon: Icon, override val installScript: File) : Sc
 
     override fun getConnectionConfig(): LspConnectionConfig {
         val lspDir = File(sandboxHomeDir(), ".lsp/java")
-        val pluginsDir = File(lspDir, "plugins")
-        val launcherJar = pluginsDir.listFiles()
+        val launcherJar = File(lspDir, "plugins").listFiles()
             ?.firstOrNull { it.name.startsWith("org.eclipse.equinox.launcher_") && it.name.endsWith(".jar") }
             ?.absolutePath
         if (launcherJar == null) {
             return LspConnectionConfig.Process(arrayOf(File(lspDir, "bin/jdtls").absolutePath))
         }
-        val configDir = File(lspDir, "config_linux").absolutePath
-        val dataDir = File(lspDir, "/sdcard/Nost-Team/laser/nb-dev/").absolutePath
         val command = arrayOf(
             "java",
             "-Declipse.application=org.eclipse.jdt.ls.core.id1",
@@ -55,8 +51,8 @@ class JavaServer(override val icon: Icon, override val installScript: File) : Sc
             "-Dlog.level=ALL",
             "-Xmx1G",
             "-jar", launcherJar,
-            "-configuration", configDir,
-            "-data", dataDir
+            "-configuration", File(lspDir, "config_linux").absolutePath,
+            "-data", File(lspDir, "/sdcard/Nost-Team/laser/nb-dev/").absolutePath
         )
         return LspConnectionConfig.Process(command)
     }
