@@ -4,7 +4,7 @@
   "name": "Java LSP",
   "mainClass": "com.androdev.java.lsp.Main",
   "version": "1.0.0",
-  "description": "Xed-Editor extension for java lsp",
+  "description": "Xed-Editor extension for Java LSP",
   "author": {
     "displayName": "andr0d1v",
     "github": "andr0d1v"

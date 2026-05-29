@@ -1,6 +1,6 @@
 # ☕ Java LSP Extension for Xed-Editor
 
-This extension adds lsp support for the [Java](https://java.com/) language in Xed-Editor.
+This extension adds LSP support for the [Java](https://java.com/) language in Xed-Editor.
 
 ## 📦 Installation
 
