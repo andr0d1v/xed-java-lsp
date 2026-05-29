@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Xed-Editor extension",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name",
+    "mainClass",
+    "author",
+    "repository"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Xed-Editor extension schema URL. This property enables theme validation and auto-completion"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z][a-zA-Z0-9]*(\\.[a-zA-Z][a-zA-Z0-9]*)+$",
+      "description": "Unique identifier of the extension (package name)"
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable extension name",
+      "minLength": 1
+    },
+    "mainClass": {
+      "type": "string",
+      "pattern": "^[a-zA-Z][a-zA-Z0-9]*(\\.[a-zA-Z][a-zA-Z0-9]*)+$",
+      "description": "Fully qualified entry class name"
+    },
+    "version": {
+      "type": "string",
+      "default": "1.0.0",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version string"
+    },
+    "description": {
+      "type": ["string", "null"],
+      "default": null,
+      "description": "Optional human-readable description of the extension"
+    },
+    "author": {
+      "$ref": "#/$defs/ExtensionAuthor"
+    },
+    "minAppVersion": {
+      "type": ["integer", "null"],
+      "default": null,
+      "description": "Minimum Xed-Editor version code supported. null means no minimum restriction"
+    },
+    "maxAppVersion": {
+      "type": ["integer", "null"],
+      "default": null,
+      "description": "Maximum Xed-Editor version code supported. null means no maximum restriction"
+    },
+    "repository": {
+      "type": "string",
+      "format": "uri",
+      "description": "Source code repository URL"
+    },
+    "license": {
+      "type": ["string", "null"],
+      "default": null,
+      "description": "SPDX license identifier (recommended)"
+    },
+    "tags": {
+      "type": "array",
+      "uniqueItems": true,
+      "minItems": 0,
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Tags for categorization and discovery"
+    },
+    "hasSettings": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this extension exposes a settings UI"
+    }
+  },
+  "$defs": {
+    "ExtensionAuthor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["displayName"],
+      "properties": {
+        "displayName": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Display name of the author"
+        },
+        "github": {
+          "type": ["string", "null"],
+          "default": null,
+          "description": "GitHub username (not URL, just the profile name)",
+          "pattern": "^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$"
+        }
+      }
+    }
+  }
+}

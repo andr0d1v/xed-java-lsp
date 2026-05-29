@@ -1,0 +1,18 @@
+{
+  "$schema": "schema/schema.json",
+  "id": "com.androdev.java.lsp",
+  "name": "Java LSP",
+  "mainClass": "com.androdev.java.lsp.Main",
+  "version": "1.0.0",
+  "description": "Xed-Editor extension for java lsp",
+  "author": {
+    "displayName": "andr0d1v",
+    "github": "andr0d1v"
+  },
+  "minAppVersion": null,
+  "maxAppVersion": null,
+  "repository": "https://github.com/andr0d1v/xed-java-lsp",
+  "license": "MIT",
+  "tags": ["java", "lsp", "editor", "highlighting"],
+  "hasSettings": false
+}

@@ -1,0 +1,45 @@
+name: Extension Compile Test
+
+on:
+  schedule:
+    - cron: "0 */24 * * *"
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+
+permissions:
+  contents: read 
+
+jobs:
+  build:
+    name: Extension Compile Test
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout source code
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Setup JDK
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      # Make scripts executable
+      - name: Make scripts executable
+        run: chmod +x ./gradlew && chmod +x ./compileDebug && chmod +x ./compileRelease
+
+      # Build (Debug)
+      - name: Compile Debug
+        run: ./compileDebug
+        
+      # Upload extension artifacts
+      - name: Upload ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: extension-build
+          path: output/*.zip
