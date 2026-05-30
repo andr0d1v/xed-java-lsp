@@ -45,6 +45,7 @@ class JavaServer(override val icon: Icon, override val installScript: File) : Sc
         }
         val command = arrayOf(
             "java",
+            "-Djava.import.generatesMetadataFilesAtProjectRoot=false",
             "-Declipse.application=org.eclipse.jdt.ls.core.id1",
             "-Dosgi.bundles.defaultStartLevel=4",
             "-Declipse.product=org.eclipse.jdt.ls.core.product",
