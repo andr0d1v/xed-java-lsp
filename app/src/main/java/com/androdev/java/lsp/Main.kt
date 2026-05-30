@@ -36,6 +36,8 @@ class Main(context: ExtensionContext) : ExtensionAPI(context) {
         }
     }
 
+    override fun onUpdated() {}
+
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
 
     override fun onActivityDestroyed(activity: Activity) {}
