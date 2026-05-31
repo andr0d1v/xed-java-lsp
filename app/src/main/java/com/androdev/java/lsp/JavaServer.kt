@@ -6,6 +6,7 @@ import com.rk.file.child
 import com.rk.file.sandboxHomeDir
 import com.rk.icons.Icon
 import com.rk.lsp.LspConnectionConfig
+import com.rk.lsp.ProcessConnection
 import com.rk.lsp.ScriptedLspServer
 import java.io.File
 
@@ -43,18 +44,19 @@ class JavaServer(override val icon: Icon, override val installScript: File) : Sc
         if (launcherJar == null) {
             return LspConnectionConfig.Process(arrayOf(File(lspDir, "bin/jdtls").absolutePath))
         }
-        val command = arrayOf(
-            "java",
-            "-Djava.import.generatesMetadataFilesAtProjectRoot=false",
-            "-Declipse.application=org.eclipse.jdt.ls.core.id1",
-            "-Dosgi.bundles.defaultStartLevel=4",
-            "-Declipse.product=org.eclipse.jdt.ls.core.product",
-            "-Dlog.level=ALL",
-            "-Xmx1G",
-            "-jar", launcherJar,
-            "-configuration", File(lspDir, "config_linux").absolutePath,
-            "-data", File(lspDir, "/sdcard/Nost-Team/laser/nb-dev/").absolutePath
-        )
-        return LspConnectionConfig.Process(command)
+        return LspConnectionConfig.Custom { instance ->
+            ProcessConnection(arrayOf(
+                "java",
+                "-Djava.import.generatesMetadataFilesAtProjectRoot=false",
+                "-Declipse.application=org.eclipse.jdt.ls.core.id1",
+                "-Dosgi.bundles.defaultStartLevel=4",
+                "-Declipse.product=org.eclipse.jdt.ls.core.product",
+                "-Dlog.level=ALL",
+                "-Xmx1G",
+                "-jar", launcherJar,
+                "-configuration", File(lspDir, "config_linux").absolutePath,
+                "-data", File(lspDir, instance.projectRoot.getAbsolutePath()).absolutePath
+            ), instance)
+        }
     }
 }

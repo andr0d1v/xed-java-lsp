@@ -14,7 +14,7 @@ install() {
   info 'Installing Eclipse JDT Language Server (jdtls)...'
 
   if ! command -v java >/dev/null 2>&1; then
-    info 'Installing java...'
+    info 'Installing OpenJDK...'
     apt install -y default-jdk
   fi
 
