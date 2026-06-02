@@ -9,10 +9,10 @@
     "displayName": "andr0d1v",
     "github": "andr0d1v"
   },
-  "minAppVersion": null,
+  "minAppVersion": 87,
   "maxAppVersion": null,
   "repository": "https://github.com/andr0d1v/xed-java-lsp",
   "license": "MIT",
-  "tags": ["java", "lsp", "editor", "highlighting"],
+  "tags": ["java", "lsp", "editor"],
   "hasSettings": false
 }
