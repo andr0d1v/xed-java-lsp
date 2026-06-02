@@ -30,13 +30,19 @@ class Main(context: ExtensionContext) : ExtensionAPI(context) {
         }
     }
 
-    override fun onUninstalled() {
+    private fun dispose() {
         javaServer?.let {
             LspRegistry.unregisterServer(it)
         }
     }
 
-    override fun onUpdated() {}
+    override fun onUninstalled() {
+        dispose()
+    }
+
+    override fun onUpdated() {
+        dispose()
+    }
 
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
 
