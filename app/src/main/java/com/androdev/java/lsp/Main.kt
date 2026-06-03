@@ -14,7 +14,7 @@ import com.rk.lsp.LspRegistry
 @Keep
 @Suppress("unused")
 class Main(context: ExtensionContext) : ExtensionAPI(context) {
-    private var javaServer: JavaServer? = null;
+    private var javaServer: JavaServer? = null
 
     override fun onExtensionLoaded() {
         // Copy LSP install script
@@ -37,6 +37,7 @@ class Main(context: ExtensionContext) : ExtensionAPI(context) {
     }
 
     override fun onUninstalled() {
+        javaServer?.uninstall(context.appContext)
         dispose()
     }
 
