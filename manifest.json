@@ -3,7 +3,7 @@
   "id": "com.androdev.java.lsp",
   "name": "Java LSP",
   "mainClass": "com.androdev.java.lsp.Main",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Xed-Editor extension for Java LSP",
   "author": {
     "displayName": "andr0d1v",
