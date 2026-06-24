@@ -38,7 +38,9 @@ class Main(context: ExtensionContext) : ExtensionAPI(context) {
     }
 
     override fun onUninstalled() {
-        javaServer?.uninstall(ActivityProvider.currentActivity!!)
+        ActivityProvider.currentActivity?.let {
+            javaServer?.uninstall(it)
+        }
         dispose()
     }
 

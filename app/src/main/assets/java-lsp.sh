@@ -6,13 +6,21 @@ info 'Preparing...'
 apt update && apt upgrade -y
 apt install -y curl ca-certificates tar
 
-JDTLS_VERSION="1.58.0"
-JDTLS_URL="https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/${JDTLS_VERSION}/jdt-language-server-${JDTLS_VERSION}-202604151538.tar.gz"
+ACTION="install"
+JDTLS_VERSION=""
+
+for arg in "$@"; do
+  case "$arg" in
+    --uninstall) ACTION="uninstall" ;;
+    --update)    ACTION="update" ;;
+    *)           JDTLS_VERSION="$arg" ;;
+  esac
+done
+
+JDTLS_URL="https://download.eclipse.org/jdtls/snapshots/$JDTLS_VERSION"
 INSTALL_DIR="$HOME/.lsp/java"
 
-install() {
-  info 'Installing Eclipse JDT Language Server (jdtls)...'
-
+execute_installation() {
   if ! command -v java >/dev/null 2>&1; then
     info 'Installing OpenJDK...'
     apt install -y default-jdk
@@ -34,27 +42,31 @@ install() {
   fi
 
   echo "$JDTLS_VERSION" > version.txt
-
-  info 'Java LSP (jdtls) installed successfully.'
-  exit 0
 }
 
-uninstall() {
-  info 'Uninstalling Java LSP (jdtls)...'
-
-  rm -rf "$INSTALL_DIR"
-
-  info 'jdtls uninstalled successfully.'
+install() {
+  info 'Installing Eclipse JDT Language Server (jdtls)...'
+  execute_installation
+  info 'Eclipse JDT Language Server (jdtls) installed successfully.'
   exit 0
 }
 
 update() {
-  info 'Updating Java LSP (jdtls)...'
-  install
+  info 'Updating Eclipse JDT Language Server (jdtls)...'
+  execute_installation
+  info 'Eclipse JDT Language Server (jdtls) updated successfully.'
+  exit 0
 }
 
-case "$1" in
-  --uninstall) uninstall;;
-  --update) update;;
-  *) install;;
+uninstall() {
+  info 'Uninstalling Eclipse JDT Language Server (jdtls)...'
+  rm -rf "$INSTALL_DIR"
+  info 'Eclipse JDT Language Server (jdtls) uninstalled successfully.'
+  exit 0
+}
+
+case "$ACTION" in
+  uninstall) uninstall;;
+  update)    update;;
+  *)         install;;
 esac

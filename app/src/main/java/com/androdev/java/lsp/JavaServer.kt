@@ -1,6 +1,8 @@
 package com.androdev.java.lsp
 
+import android.app.Activity
 import android.content.Context
+import com.androdev.java.lsp.utils.JdtlsApi
 import com.rk.exec.isTerminalInstalled
 import com.rk.file.child
 import com.rk.file.sandboxHomeDir
@@ -16,10 +18,10 @@ class JavaServer(override val icon: Icon, override val installScript: File) : Sc
     override val serverName = "jdtls"
     override val supportedExtensions = listOf("java")
 
-    override val installId = "Java language server"
+    override val installId = "java"
 
-    companion object {
-        private const val LATEST_VERSION = "1.58.0"
+    val latestVersion by lazy {
+        JdtlsApi().fetchLatestVersion() ?: "jdt-language-server-1.59.0-202605111959.tar.gz"
     }
 
     override suspend fun isInstalled(context: Context): Boolean {
@@ -30,10 +32,16 @@ class JavaServer(override val icon: Icon, override val installScript: File) : Sc
         return sandboxHomeDir().child(".lsp/java/bin/jdtls").exists()
     }
 
+    override fun install(activity: Activity) = launchInstaller(activity, latestVersion)
+
+    override fun uninstall(activity: Activity) = launchInstaller(activity, "--uninstall", latestVersion)
+
+    override fun update(activity: Activity) = launchInstaller(activity, "--update", latestVersion)
+
     override suspend fun isUpdatable(context: Context): Boolean {
         val versionFile = sandboxHomeDir().child(".lsp/java/version.txt")
         val currentVersion = runCatching { versionFile.readText().trim() }.getOrNull()
-        return currentVersion != LATEST_VERSION
+        return currentVersion != null && currentVersion != latestVersion
     }
 
     override fun getConnectionConfig(): LspConnectionConfig {
