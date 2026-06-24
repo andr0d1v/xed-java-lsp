@@ -3,6 +3,7 @@ package com.androdev.java.lsp
 import android.app.Activity
 import android.os.Bundle
 import androidx.annotation.Keep
+import com.rk.extension.ActivityProvider
 import com.rk.extension.ExtensionAPI
 import com.rk.extension.ExtensionContext
 import com.rk.file.child
@@ -37,13 +38,15 @@ class Main(context: ExtensionContext) : ExtensionAPI(context) {
     }
 
     override fun onUninstalled() {
-        javaServer?.uninstall(context.appContext)
+        javaServer?.uninstall(ActivityProvider.currentActivity!!)
         dispose()
     }
 
     override fun onUpdated() {
         dispose()
     }
+
+    override fun onInstalled() {}
 
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
 
