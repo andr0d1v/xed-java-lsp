@@ -4,24 +4,32 @@ import android.app.Activity
 import android.content.Context
 import com.androdev.java.lsp.utils.JdtlsApi
 import com.rk.exec.isTerminalInstalled
+import com.rk.extension.ExtensionContext
 import com.rk.file.child
 import com.rk.file.sandboxHomeDir
 import com.rk.icons.Icon
 import com.rk.lsp.LspConnectionConfig
 import com.rk.lsp.ProcessConnection
 import com.rk.lsp.ScriptedLspServer
+import io.github.rosemoe.sora.lsp.requests.Timeouts
+import kotlinx.coroutines.launch
 import java.io.File
 
-class JavaServer(override val icon: Icon, override val installScript: File) : ScriptedLspServer() {
+class JavaServer(
+    private val context: ExtensionContext,
+    override val icon: Icon,
+    override val supportedExtensions: List<String>,
+    override val installScript: File
+) : ScriptedLspServer() {
+
     override val id = "java"
     override val languageName = "Java"
     override val serverName = "jdtls"
-    override val supportedExtensions = listOf("java")
 
     override val installId = "java"
 
-    val latestVersion by lazy {
-        JdtlsApi().fetchLatestVersion() ?: "jdt-language-server-1.59.0-202605111959.tar.gz"
+    private fun fetchLatestVersion(): String {
+        return JdtlsApi().fetchLatestVersion() ?: "jdt-language-server-1.59.0-202605111959.tar.gz"
     }
 
     override suspend fun isInstalled(context: Context): Boolean {
@@ -32,16 +40,28 @@ class JavaServer(override val icon: Icon, override val installScript: File) : Sc
         return sandboxHomeDir().child(".lsp/java/bin/jdtls").exists()
     }
 
-    override fun install(activity: Activity) = launchInstaller(activity, latestVersion)
+    override fun install(activity: Activity) {
+        context.scope.launch {
+            launchInstaller(activity, "--install", fetchLatestVersion())
+        }
+    }
 
-    override fun uninstall(activity: Activity) = launchInstaller(activity, "--uninstall", latestVersion)
+    override fun uninstall(activity: Activity) {
+        context.scope.launch {
+            launchInstaller(activity, "--uninstall", fetchLatestVersion())
+        }
+    }
 
-    override fun update(activity: Activity) = launchInstaller(activity, "--update", latestVersion)
+    override fun update(activity: Activity) {
+        context.scope.launch {
+            launchInstaller(activity, "--update", fetchLatestVersion())
+        }
+    }
 
-    override suspend fun isUpdatable(context: Context): Boolean {
+    override suspend fun hasUpdate(context: Context): Boolean {
         val versionFile = sandboxHomeDir().child(".lsp/java/version.txt")
         val currentVersion = runCatching { versionFile.readText().trim() }.getOrNull()
-        return currentVersion != null && currentVersion != latestVersion
+        return currentVersion != null && currentVersion != fetchLatestVersion()
     }
 
     override fun getConnectionConfig(): LspConnectionConfig {
@@ -67,4 +87,6 @@ class JavaServer(override val icon: Icon, override val installScript: File) : Sc
             ), instance)
         }
     }
+
+    override val customTimeouts = mapOf(Timeouts.INIT to 300000)
 }

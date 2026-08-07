@@ -1,9 +1,6 @@
 package com.androdev.java.lsp
 
-import android.app.Activity
-import android.os.Bundle
 import androidx.annotation.Keep
-import com.rk.extension.ActivityProvider
 import com.rk.extension.ExtensionAPI
 import com.rk.extension.ExtensionContext
 import com.rk.file.child
@@ -11,13 +8,14 @@ import com.rk.file.createDirIfNot
 import com.rk.file.localBinDir
 import com.rk.icons.Icon
 import com.rk.lsp.LspRegistry
+import kotlinx.coroutines.runBlocking
 
 @Keep
 @Suppress("unused")
 class Main(context: ExtensionContext) : ExtensionAPI(context) {
     private var javaServer: JavaServer? = null
 
-    override fun onExtensionLoaded() {
+    override fun onLoad() {
         // Copy LSP install script
         val javaAssetStream = context.assets.open("java-lsp.sh")
         val javaAsset = javaAssetStream.bufferedReader().use { it.readText() }
@@ -26,41 +24,29 @@ class Main(context: ExtensionContext) : ExtensionAPI(context) {
             it.writeText(javaAsset)
         }
 
-        javaServer = JavaServer(Icon.ExternalResourceIcon(R.drawable.java, context.resources), javaInstallScript).also {
-            LspRegistry.registerServer(it)
-        }
+        javaServer =
+            JavaServer(
+                context = context,
+                icon = Icon.ExternalResourceIcon(R.drawable.java, context.resources),
+                supportedExtensions = listOf("java"),
+                installScript = javaInstallScript
+            ).also {
+                LspRegistry.registerServer(it)
+            }
     }
 
-    private fun dispose() {
+    override fun onDispose() {
         javaServer?.let {
             LspRegistry.unregisterServer(it)
         }
     }
 
     override fun onUninstalled() {
-        ActivityProvider.currentActivity?.let {
-            javaServer?.uninstall(it)
+        context.currentActivity?.let {
+            val isInstalled = runBlocking { javaServer?.isInstalled(it) } ?: false
+            if (isInstalled) {
+                javaServer?.uninstall(it)
+            }
         }
-        dispose()
     }
-
-    override fun onUpdated() {
-        dispose()
-    }
-
-    override fun onInstalled() {}
-
-    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
-
-    override fun onActivityDestroyed(activity: Activity) {}
-
-    override fun onActivityPaused(activity: Activity) {}
-
-    override fun onActivityResumed(activity: Activity) {}
-
-    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
-
-    override fun onActivityStarted(activity: Activity) {}
-
-    override fun onActivityStopped(activity: Activity) {}
 }
