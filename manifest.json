@@ -3,13 +3,13 @@
   "id": "com.androdev.java.lsp",
   "name": "Java LSP",
   "mainClass": "com.androdev.java.lsp.Main",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Xed-Editor extension for Java LSP",
   "author": {
     "displayName": "andr0d1v",
     "github": "andr0d1v"
   },
-  "minAppVersion": 87,
+  "minAppVersion": 95,
   "maxAppVersion": null,
   "repository": "https://github.com/andr0d1v/xed-java-lsp",
   "license": "MIT",
